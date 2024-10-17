@@ -1,0 +1,38 @@
+#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include <queue>
+#include <climits>
+
+using namespace std;
+
+// Simulating road network as an adjacency list
+unordered_map<int, vector<pair<int, int>>> roadNetwork = {
+    {0, {{1, 2}, {2, 4}}},  // Node 0 connects to node 1 with weight 2, node 2 with weight 4
+    {1, {{3, 7}, {0, 2}}},  // Node 1 connects to node 3 with weight 7, node 0 with weight 2
+    {2, {{3, 3}, {0, 4}}},  // Node 2 connects to node 3 with weight 3, node 0 with weight 4
+    {3, {{1, 7}, {2, 3}}}   // Node 3 connects to node 1 with weight 7, node 2 with weight 3
+};
+
+// Simulated traffic data (for simplicity, represented as number of vehicles at each node)
+unordered_map<int, int> trafficData = {
+    {0, 5},  // 5 vehicles at node 0
+    {1, 10}, // 10 vehicles at node 1
+    {2, 8},  // 8 vehicles at node 2
+    {3, 3}   // 3 vehicles at node 3
+};
+
+// Event and emergency data (for simplicity, we track event location and emergency vehicles)
+struct Event {
+    int location;
+    int scale; // Scale of the event (higher scale means more impact on traffic)
+};
+
+Event event = {1, 3};  // Event happening at node 1 with a scale of 3
+
+struct EmergencyVehicle {
+    int location;
+    int destination;
+};
+
+EmergencyVehicle emergency = {0, 3};  // Emergency vehicle at node 0, headed to node 3
