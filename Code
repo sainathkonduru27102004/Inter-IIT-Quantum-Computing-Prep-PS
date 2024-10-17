@@ -72,8 +72,7 @@ vector<int> dijkstra(int startNode, int totalNodes) {
     return distances;
 }
 
-Simulating the Role of QAOA Using a Classical Approach (for now):
-Copy code
+Next Step:- Simulating the Role of QAOA Using a Classical Approach (for now):
 // Simple simulation of QAOA's role in optimizing traffic signals
 // Each intersection (node) has a variable signal timing based on vehicle counts
 
@@ -134,7 +133,7 @@ unordered_map<int, int> congestionLevels = {
     {3, 3}   // Low congestion on road 3
 };
 
-// Function to simulate vehicle rerouting based on congestion (Quantum Annealing equivalent)
+Next Step // Function to simulate vehicle rerouting based on congestion (Quantum Annealing equivalent)
 vector<int> reroute(int start, int end) {
     // Use a priority queue (min-heap) for Dijkstra's algorithm to find the least congested path
     priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
