@@ -1,3 +1,5 @@
+Code for Input Data Collection:
+
 #include <iostream>
 #include <vector>
 #include <unordered_map>
@@ -36,3 +38,154 @@ struct EmergencyVehicle {
 };
 
 EmergencyVehicle emergency = {0, 3};  // Emergency vehicle at node 0, headed to node 3
+
+
+Next Step: Classical Traffic Optimization Using Dijkstra's Algorithm
+
+// Dijkstra's Algorithm for shortest path
+vector<int> dijkstra(int startNode, int totalNodes) {
+    vector<int> distances(totalNodes, INT_MAX);
+    distances[startNode] = 0;
+    
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    pq.push({0, startNode});
+
+    while (!pq.empty()) {
+        int currentDist = pq.top().first;
+        int currentNode = pq.top().second;
+        pq.pop();
+
+        if (currentDist > distances[currentNode]) continue;
+
+        // Exploring neighbors of the current node
+        for (auto neighbor : roadNetwork[currentNode]) {
+            int nextNode = neighbor.first;
+            int edgeWeight = neighbor.second;
+
+            if (distances[currentNode] + edgeWeight < distances[nextNode]) {
+                distances[nextNode] = distances[currentNode] + edgeWeight;
+                pq.push({distances[nextNode], nextNode});
+            }
+        }
+    }
+
+    return distances;
+}
+
+Simulating the Role of QAOA Using a Classical Approach (for now):
+Copy code
+// Simple simulation of QAOA's role in optimizing traffic signals
+// Each intersection (node) has a variable signal timing based on vehicle counts
+
+// Define the traffic data (vehicle counts at each intersection)
+unordered_map<int, int> trafficData = {
+    {0, 10}, // Intersection 0 has 10 vehicles waiting
+    {1, 25}, // Intersection 1 has 25 vehicles
+    {2, 5},  // Intersection 2 has 5 vehicles
+    // ... Add more intersections if needed
+};
+
+// Function to optimize traffic signal timing based on vehicle counts (simulating QAOA)
+void optimizeSignalTiming() {
+    cout << "Optimizing traffic signals at each intersection...\n";
+    
+    for (auto &[intersection, vehicleCount] : trafficData) {
+        // Simulate signal timing: Longer green lights for intersections with higher vehicle counts
+        int greenLightDuration = 10 + (vehicleCount / 2);  // Increase green light duration based on traffic
+        int redLightDuration = 20 - (vehicleCount / 4);    // Shorten red light duration
+        
+        // Ensure minimum and maximum limits for signal timings
+        greenLightDuration = min(max(greenLightDuration, 10), 30);
+        redLightDuration = min(max(redLightDuration, 5), 20);
+        
+        // Print the optimized signal timings for this intersection
+        cout << "Intersection " << intersection << ": Green Light = " << greenLightDuration 
+             << " seconds, Red Light = " << redLightDuration << " seconds\n";
+    }
+}
+
+int main() {
+    // Call the function to simulate traffic signal optimization
+    optimizeSignalTiming();
+    return 0;
+}
+
+
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <unordered_map>
+
+using namespace std;
+
+// A simple graph representing the road network (Dijkstra-based rerouting simulation)
+unordered_map<int, vector<pair<int, int>>> roadNetwork = {
+    {0, {{1, 10}, {2, 15}}},
+    {1, {{0, 10}, {2, 5}, {3, 20}}},
+    {2, {{0, 15}, {1, 5}, {3, 10}}},
+    {3, {{1, 20}, {2, 10}}}
+};
+
+// Simulate real-time traffic data (congestion level)
+unordered_map<int, int> congestionLevels = {
+    {0, 2},  // Lower congestion on road 0
+    {1, 5},  // Medium congestion on road 1
+    {2, 10}, // High congestion on road 2
+    {3, 3}   // Low congestion on road 3
+};
+
+// Function to simulate vehicle rerouting based on congestion (Quantum Annealing equivalent)
+vector<int> reroute(int start, int end) {
+    // Use a priority queue (min-heap) for Dijkstra's algorithm to find the least congested path
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+    unordered_map<int, int> distance;
+    unordered_map<int, int> parent;
+    
+    for (auto &[node, _] : roadNetwork) {
+        distance[node] = INT_MAX;
+    }
+    
+    distance[start] = 0;
+    pq.push({0, start});
+    
+    while (!pq.empty()) {
+        int currentDistance = pq.top().first;
+        int currentNode = pq.top().second;
+        pq.pop();
+        
+        // Check all neighbors of the current node
+        for (auto &[neighbor, roadLength] : roadNetwork[currentNode]) {
+            int adjustedDistance = currentDistance + roadLength + congestionLevels[neighbor];
+            
+            // If we find a shorter path, update the distance
+            if (adjustedDistance < distance[neighbor]) {
+                distance[neighbor] = adjustedDistance;
+                parent[neighbor] = currentNode;
+                pq.push({adjustedDistance, neighbor});
+            }
+        }
+    }
+    
+// Backtrack to find the optimal path
+    vector<int> path;
+    for (int at = end; at != start; at = parent[at]) {
+        path.push_back(at);
+    }
+    path.push_back(start);
+    reverse(path.begin(), path.end());
+    
+    return path;
+}
+
+int main() {
+    int start = 0, end = 3;
+    vector<int> path = reroute(start, end);
+    
+    cout << "Rerouted Path from " << start << " to " << end << ": ";
+    for (int node : path) {
+        cout << node << " ";
+    }
+    cout << endl;
+    
+    return 0;
+}
